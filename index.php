@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>This is a Student Crud Management System</h1>
+    <h1>This is Student Crud Management System</h1>
 </body>
 
 </html>
