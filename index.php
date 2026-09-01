@@ -52,8 +52,8 @@
                     </ul>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end">
-                    <a href="create.php">
-                        <button type="button" class="btn btn-primary">
+                    <a href="add-students.php">
+                        <button type="button" class="btn btn-outline-primary">
                             Add Student
                         </button>
                     </a>
@@ -165,7 +165,7 @@
         </div>
     </div>
 
-    
+
     <script src="bootstrap.min.js"></script>
 </body>
 
