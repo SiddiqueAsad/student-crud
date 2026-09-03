@@ -7,7 +7,7 @@ if (isset($_POST["submit"])) {
     $course = $_POST["course"];
     $academic_year = $_POST["academic_year"];
     $phone_num = $_POST["phone_num"];
-    $photo = time() . "_" . $_FILES["photo"]["username"];
+    $photo = time() . "_" . $_FILES["photo"]["name"];
     $temp = $_FILES["photo"]["tmp_name"];
     $type = $_FILES["photo"]["type"];
     $size = $_FILES["photo"]["size"];
@@ -21,10 +21,9 @@ if (isset($_POST["submit"])) {
     if (!file_exists("uploads")) {
         mkdir("uploads", 0777, true);
     }
-
-    if ($fileType != "image/jpeg" && $fileType != "image/png") {
+    if ($type != "image/jpeg" && $type != "image/png") {
         $message = "Only JPEG and PNG files are allowed.";
-    } else if ($fileSize > 2097512) {
+    } else if ($size > 2097512) {
         $message = "Maximum File Size is 2MB";
     } else {
         move_uploaded_file($temp, "uploads/" . $photo);

@@ -10,6 +10,7 @@ $total = mysqli_query($conn, "SELECT * FROM students;");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <title>Document</title>
 </head>
 
@@ -50,37 +51,51 @@ $total = mysqli_query($conn, "SELECT * FROM students;");
             </div>
         </div>
     </nav>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Course</th>
-            <th>Academic Year</th>
-            <th>Photo</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        <?php while ($row = mysqli_fetch_assoc($student)) { ?>
+    <div class="table-responsive shadow-sm rounded">
+
+        <table class="table table-dark table-striped table-hover align-middle text-center mb-0">
             <tr>
-                <td><?php echo $row["id"]; ?></td>
-                <td><?php echo $row["name"]; ?></td>
-                <td><?php echo $row["email"]; ?></td>
-                <td><?php echo $row["course"]; ?></td>
-                <td><?php echo $row["academic_year"]; ?></td>
-                <td><img src="uploads/<?php echo $row["photo"]; ?>" alt="Photo" width="100"></td>
-                <td><a href="edit.php?id=<?php echo $row["id"]; ?>">Edit</a></td>
-                <td><a href="delete.php?id=<?php echo $row["id"]; ?>">Delete</a></td>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Academic Year</th>
+                <th>Phone Number</th>
+                <th>Photo</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
-        <?php } ?>
-    </table>
-    <p><?php echo "Total Students : " . mysqli_num_rows($total); ?></p><br>
+            <?php while ($row = mysqli_fetch_assoc($student)) { ?>
+                <tr>
+                    <td><?php echo $row["id"]; ?></td>
+                    <td class="fw-semibold"><?php echo $row["name"]; ?></td>
+                    <td><?php echo $row["email"]; ?></td>
+                    <td><span class="badge text-bg-primary"><?php echo $row["course"]; ?></span>
+                    </td>
+                    <td><span class="badge text-bg-secondary"><?php echo $row["academic_year"]; ?></span>
+                    </td>
+                    <td><?php echo $row["phone_num"]; ?></td>
+                    <td><a href="uploads/<?php echo $row["photo"]; ?>" target="_blank">
+                            <img src="uploads/<?php echo $row["photo"]; ?>" alt="Photo" width="55" height="55"
+                                class="rounded-circle object-fit-cover"></a></td>
+                    <td><a href="edit.php?id=<?php echo $row["id"]; ?>" class="btn btn-sm btn-outline-warning">
+                            Edit</a>
+                    </td>
+                    <td><a href="delete.php?id=<?php echo $row["id"]; ?>" class="btn btn-sm btn-outline-danger">
+                            Delete</a></td>
+                </tr>
+            <?php } ?>
+        </table>
+
+    </div>
+    <p class="text-center fw-bold fs-4"><?php echo "Total Students : " . mysqli_num_rows($total); ?></p><br>
 
 
 
 
 
 
+    <script src="bootstrap.min.js"></script>
 </body>
 
 </html>
