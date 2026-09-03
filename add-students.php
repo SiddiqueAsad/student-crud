@@ -1,3 +1,47 @@
+<?php
+require "connection.php";
+$message = "";
+if (isset($_POST["submit"])) {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $course = $_POST["course"];
+    $academic_year = $_POST["academic_year"];
+    $phone_num = $_POST["phone_num"];
+    $photo = time() . "_" . $_FILES["photo"]["username"];
+    $temp = $_FILES["photo"]["tmp_name"];
+    $type = $_FILES["photo"]["type"];
+    $size = $_FILES["photo"]["size"];
+    if (empty($name) || empty($email) || empty($course) || empty($academic_year) || empty($phone_num)) {
+        $message = "Please fill all the fields.";
+    } else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Please enter a valid email address.";
+    } else if (strlen($phone_num) != 10) {
+        $message = "Please enter a valid phone number.";
+    }
+    if (!file_exists("uploads")) {
+        mkdir("uploads", 0777, true);
+    }
+
+    if ($fileType != "image/jpeg" && $fileType != "image/png") {
+        $message = "Only JPEG and PNG files are allowed.";
+    } else if ($fileSize > 2097512) {
+        $message = "Maximum File Size is 2MB";
+    } else {
+        move_uploaded_file($temp, "uploads/" . $photo);
+        $stmt = mysqli_prepare($conn, "INSERT INTO students(name, email, course, academic_year, phone_num, photo) VALUES(?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssssss", $name, $email, $course, $academic_year, $phone_num, $photo);
+        if (mysqli_stmt_execute($stmt)) {
+            header("Location: http://localhost/Student-Crud/view.php");
+        } else {
+            $message = "Error: " . mysqli_error($conn);
+        }
+    }
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,7 +101,9 @@
                         <p class="fs-1 fw-bold mx-3">Add Student</p>
                     </div>
                 </div>
-                <form class="add-student row g-3 needs-validation" novalidate>
+                <div class=""><?php echo $message ?></div>
+                <form class="add-student row g-3 needs-validation" novalidate method="post"
+                    enctype="multipart/form-data">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <label for="validationCustom01" class="form-label">Name</label>
                         <input type="text" class="form-control" id="validationCustom01" name="name"
@@ -84,19 +130,23 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <label for="validationCustom04" class="form-label">Academic Year</label>
-                        <select class="form-select" id="validationCustom04" required>
-                            <option selected disabled>Select your Year</option>
-                            <option name="classyear" value="FY">FY</option>
-                            <option name="classyear" value="SY">SY</option>
-                            <option name="classyear" value="TY">TY</option>
+
+                        <select class="form-select" id="validationCustom04" name="academic_year" required>
+
+                            <option selected disabled value="">Select your Year</option>
+                            <option value="FY">FY</option>
+                            <option value="SY">SY</option>
+                            <option value="TY">TY</option>
+
                         </select>
+
                         <div class="invalid-feedback">
                             Please select a valid year.
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <label for="validationCustom05" class="form-label">Phone Number</label>
-                        <input type="number" class="form-control" name="phonenumber" placeholder="Enter your Number..."
+                        <input type="number" class="form-control" name="phone_num" placeholder="Enter your Number..."
                             id="validationCustom05" required>
                         <div class="invalid-feedback">
                             Please provide a valid Phone Number.
@@ -107,7 +157,8 @@
                         <input type="file" name="photo" accept="image/jpeg,image/png" class="form-control" required>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center">
-                        <button class="btn btn-primary btn-lg mt-2 mb-4" type="submit">Submit form</button>
+                        <button class="btn btn-primary btn-lg mt-2 mb-4" type="submit" name="submit">Submit
+                            form</button>
                     </div>
                 </form>
             </div>
@@ -123,6 +174,27 @@
         </div>
     </div>
     <script src="bootstrap.min.js"></script>
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
 </body>
 
 </html>
